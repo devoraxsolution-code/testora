@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: eduquizx_backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    restart: unless-stopped
+    volumes:
+      - ./backend:/app # For hot reloading or local dev if needed
+      - eduquizx_db:/app/data # Assuming we want to persist the local sqlite db or embeddings
+
+  frontend:
+    build: ./frontend
+    container_name: eduquizx_frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+volumes:
+  eduquizx_db:
